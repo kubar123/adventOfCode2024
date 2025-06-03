@@ -130,4 +130,4 @@ function parseFileTo2DIntArray(raw: string, delimiter = /\s+/): number[][] {
     );
 }
 
-//Aswer: 493
+//Answer: 493
