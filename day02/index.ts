@@ -42,9 +42,9 @@ To begin, get your puzzle input.
 
 //get file
 const fs = require("fs");
-const raw = fs.readFileSync("day02/info.tsv","utf-8");
+const raw = fs.readFileSync("day02/info.tsv", "utf-8");
 //split
-let data=parseFileTo2DIntArray(raw);
+let data = parseFileTo2DIntArray(raw);
 
 //make a new array using filtered list
 data = data.filter(item => isValidated(item));
@@ -57,24 +57,41 @@ console.log(data.length);
 
 //------- Validation --------
 function isValidated(report: number[]) {
-    //check if going up or down
-    console.log("CHECK:", report);
+    //loop - brute force check for only 1 error - inefficient
+    //try deleting one item from list, and recheck list. If still issue, delete List[i] until end of list
 
-    if(isGoingUp(report)){
-        if(!validateGradUp(report))
-            return false;
-    }else if (isGoingDown(report)){
-        if(!validateGradDown(report)) 
-            return false;
-    }else
-        return false;
+    for (let i = -1; i < report.length; i++) {
+        let isValid: boolean = false;
+        //try removing an item from array, retest
+        let testReport: number[] = [...report];
+        if (i >= 0)
+            testReport.splice(i, 1);
+
+
+        //check if going up or down
+        console.log("CHECK:", testReport);
+
+        if (isGoingUp(testReport)) {
+            isValid = validateGradUp(testReport);
+        } else if (isGoingDown(testReport)) {
+            isValid = validateGradDown(testReport);
+        } else
+            isValid = false;
+
+            //if valid no need to keep checking
+        if (isValid)
+            return true
+    }
+    return false;
 }
 
+
+
 //validate the number goes up/down by 1-3
-function validateGradUp(report: number[]){
-    for(let i=1;i<report.length;i++){
-        let diff=report[i]-report[i-1];
-        if (diff>3 || diff<=0){
+function validateGradUp(report: number[]) {
+    for (let i = 1; i < report.length; i++) {
+        let diff = report[i] - report[i - 1];
+        if (diff > 3 || diff <= 0) {
             return false
         }
     }
@@ -93,13 +110,13 @@ function validateGradDown(report: number[]) {
 
 
 
-function isGoingUp(info:number[]){
-    if(info[0]<info[1])
+function isGoingUp(info: number[]) {
+    if (info[0] < info[1])
         return true
     return false
 }
-function isGoingDown(info:number[]){
-    if(info[0]>info[1])
+function isGoingDown(info: number[]) {
+    if (info[0] > info[1])
         return true
     return false
 }
@@ -112,3 +129,5 @@ function parseFileTo2DIntArray(raw: string, delimiter = /\s+/): number[][] {
         line.trim().split(delimiter).map(Number)
     );
 }
+
+//Aswer: 493
