@@ -72,23 +72,25 @@ for(let row=0;row<crossword.length;row++){
 console.log(wordCount);
 
 
-
+// Check all 8 directions from current position for word match
 function checkIfWordExist(row: number, col: number) {
     const directions = [
         [0, 1], [0, -1], [1, 0], [-1, 0],  // Straight
         [1, 1], [1, -1], [-1, 1], [-1, -1]  // Diagonal
     ];
-    
+    // + isWordmatch converts boolean to number (1 or 0)
     directions.forEach(([rd, cd]) => wordCount += +isWordMatch(row, col, rd, cd));
 }
 
 function isWordMatch(row: number, col: number, rowDir: number, colDir: number): boolean {
+        // Calculate bounds for early exit
     const endRow = row + rowDir * (targetLetters.length - 1);
     const endCol = col + colDir * (targetLetters.length - 1);
     
     if (endRow < 0 || endRow >= crossword.length || 
         endCol < 0 || endCol >= crossword[0].length) return false;
-    
+
+    // Check remaining letters (skip first since we know it matches)
     for (let i = 1; i < targetLetters.length; i++) {
         if (crossword[row + i * rowDir][col + i * colDir] !== targetLetters[i]) {
             return false;
