@@ -37,7 +37,7 @@ const crossword: string[][]=raw
       .filter((line:string) => line.length>0)
       .map((line:string)=>line.split(""));
       
-      
+
 for(let row=0;row<crossword.length;row++){
     //each column...
     for (let column = 0; column < crossword[row].length; column++) {
@@ -55,54 +55,21 @@ console.log(wordCount);
 
 
 function checkIfWordExist(row: number, col: number) {
-    if (isWordHorizontalMatch(row, col, 1)) wordCount++;    // right
-    if (isWordHorizontalMatch(row, col, -1)) wordCount++;   // left
-    if (isWordVerticalMatch(row, col, 1)) wordCount++;      // up
-    if (isWordVerticalMatch(row, col, -1)) wordCount++;     // down
-    if (isWordDiagonalMatch(row, col, 1,1)) wordCount++;    // DOWN_RIGHT
-    if (isWordDiagonalMatch(row, col, 1,-1)) wordCount++;   // DOWN_LEFT
-    if (isWordDiagonalMatch(row, col, -1,1)) wordCount++;   // UP_RIGHT
-    if (isWordDiagonalMatch(row, col, -1,-1)) wordCount++;  // UP_LEFT
+    const directions = [
+        [0, 1], [0, -1], [1, 0], [-1, 0],  // Straight
+        [1, 1], [1, -1], [-1, 1], [-1, -1]  // Diagonal
+    ];
+    
+    directions.forEach(([rd, cd]) => wordCount += +isWordMatch(row, col, rd, cd));
 }
 
-function isWordHorizontalMatch(row: number, col: number, direction: number): boolean {
-    // out of bounds check
-    const endCol = col + direction * (targetLetters.length - 1);
-    if (endCol < 0 || endCol >= crossword[0].length) return false;
-    
-    // check each letter in the direction
-    for (let i = 1; i < targetLetters.length; i++) {
-        if (crossword[row][col + i * direction] !== targetLetters[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-function isWordVerticalMatch(row: number, col: number, direction: number): boolean {
-    // out of bounds check
-    const endRow = row + direction * (targetLetters.length - 1);
-    if (endRow < 0 || endRow >= crossword.length) return false;
-    
-    // check each letter in the direction
-    for (let i = 1; i < targetLetters.length; i++) {
-        if (crossword[row + i * direction][col] !== targetLetters[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-// -------------------- DIAG CHECK -----------------------
-
-function isWordDiagonalMatch(row: number, col: number, rowDir: number, colDir: number): boolean {
-    // Calculate end position
+function isWordMatch(row: number, col: number, rowDir: number, colDir: number): boolean {
     const endRow = row + rowDir * (targetLetters.length - 1);
     const endCol = col + colDir * (targetLetters.length - 1);
     
-    // Out of bounds check
     if (endRow < 0 || endRow >= crossword.length || 
         endCol < 0 || endCol >= crossword[0].length) return false;
     
-    // Check each letter diagonally
     for (let i = 1; i < targetLetters.length; i++) {
         if (crossword[row + i * rowDir][col + i * colDir] !== targetLetters[i]) {
             return false;
