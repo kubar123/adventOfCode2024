@@ -57,11 +57,12 @@ Compact the amphipod's hard drive using the process he requested. What is the re
 const fs = require("fs");
 const raw = fs.readFileSync("day09/diskmap.txt", "utf-8");
 
-//list of all 'anti nodes'
+//uncompressed disk (unsorted)
 let diskLayout: any[]=[];
-let idNo=0;
-
+//sorted disk
 let sortedDisk: any[]=[];
+//ID of the block
+let idNo=0;
 
 //sorting algorithm
 for(let i=0;i<raw.length;i+=2){
